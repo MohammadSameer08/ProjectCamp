@@ -1,0 +1,16 @@
+{
+  "name": "project-camp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "node index.js"
+  },
+  "author": "sameer",
+  "license": "ISC",
+  "devDependencies": {
+    "prettier": "3.8.4"
+  }
+}
