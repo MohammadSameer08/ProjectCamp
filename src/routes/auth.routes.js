@@ -29,14 +29,14 @@ router.route("/logout").post(verifyJWT, logout);
 
 router.route("/refresh-token").post(verifyJWT, refreshAccessToken);
 
-router.route("/verify-email/:verificationToken").get(verifyEmail);
+router.route("/verify-email/:verificationToken").get(verifyEmail); // verificationToken is un-hashed token
 
 router
   .route("/forgot-password")
   .post(userForgotPasswordValidator(), validate, forgotPassword);
 
 router
-  .route("/reset-password/:resetToken")
+  .route("/reset-password/:resetToken") // resetToken is un-hashed token
   .post(userResetForgotPasswordValidator(), validate, resetPassword);
 
 router.route("/logout").post(verifyJWT, logout);

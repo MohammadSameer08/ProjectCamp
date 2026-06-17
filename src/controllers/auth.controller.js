@@ -153,7 +153,7 @@ export const getCurrentUser = asyncHandler(async (req, res) => {
 
 // @ts-ignore
 export const verifyEmail = asyncHandler(async (req, res) => {
-  const { verificationToken } = req.params;
+  const { verificationToken } = req.params; // verificationToken is un-hashed token coming from the url
   if (!verificationToken) {
     const response = new ApiError(
       400,
@@ -307,7 +307,16 @@ export const forgotPassword = asyncHandler(async (req, res) => {
 });
 
 export const resetPassword = asyncHandler(async (req, res) => {
-  const { resetToken } = req.params;
+  // For URL: /reset-password/abc123xyz789def456...
+  // req.params = {
+  //   resetToken: "abc123xyz789def456..."
+  // }
+
+  // // For URL: /reset-password/xyz987abc654def321...
+  // req.params = {
+  //   resetToken: "xyz987abc654def321..."
+  // }
+  const { resetToken } = req.params; // resetToken is un-hashed token coming from the url
   const { newPassword } = req.body;
   let hashedToken = crypto
     .createHash("sha256")
