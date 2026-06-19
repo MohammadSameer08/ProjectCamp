@@ -12,4 +12,4 @@ export const TaskStatusEnum = {
   DONE: "done",
 };
 
-export const AvailableTaskStatus = Object.values(TaskStatusEnum); // Returns an array of values of the enumerable own properties of an object
+export const AvailableTaskStatuses = Object.values(TaskStatusEnum); // Returns an array of values of the enumerable own properties of an object
