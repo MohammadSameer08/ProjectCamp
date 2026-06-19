@@ -1,11 +1,11 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */ 
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { User } from "../models/user.models.js";
 import { ProjectMember } from "../models/projectmember.models.js";
 import { Project } from "../models/project.models.js";
 import { ApiError } from "../utils/api-error.js";
 import { asyncHandler } from "../utils/async-handler.js";
 import mongoose from "mongoose";
-import { AvailableTaskStatuses, UserRolesEnum } from "../utils/constants.js";
+import { AvailableUserRoles, UserRolesEnum } from "../utils/constants.js";
 import { ApiResponse } from "../utils/api-response.js";
 
 // @ts-ignore
@@ -20,16 +20,16 @@ export const getProjects = asyncHandler(async (req, res) => {
     {
       $lookup: {
         from: "projects",
-        localField: "projects",
+        localField: "project",
         foreignField: "_id",
         as: "project",
         pipeline: [
           {
             $lookup: {
               from: "users",
-              localField: "user",
+              localField: "createdBy",
               foreignField: "_id",
-              as: "user",
+              as: "createdBy",
             },
           },
           { $addFields: { members: { $size: "$projectmembers" } } },
@@ -59,8 +59,8 @@ export const getProjects = asyncHandler(async (req, res) => {
 });
 // @ts-ignore
 export const deleteProject = asyncHandler(async (req, res) => {
-  const { params } = req.params;
-  const project = await Project.findByIdAndDelete(params.id);
+  const { projectId } = req.params;
+  const project = await Project.findByIdAndDelete(projectId);
   if (!project) {
     throw new ApiError(404, "Project not found", undefined);
   }
@@ -76,13 +76,12 @@ export const createProject = asyncHandler(async (req, res) => {
   const project = await Project.create({
     name: name,
     description: description,
-    user: new mongoose.Types.ObjectId(req.user._id), // we will get the user id from the req.user which we set in middleware req.user = user and next().
+    createdBy: new mongoose.Types.ObjectId(req.user._id), // we will get the user id from the req.user which we set in middleware req.user = user and next().
   });
 
   await ProjectMember.create({
-    name: name,
-    projectId: new mongoose.Types.ObjectId(project._id),
-    userId: new mongoose.Types.ObjectId(req.user._id), // we will get the user id from the req.user which we set in middleware req.user = user and next().
+    project: new mongoose.Types.ObjectId(project._id),
+    user: new mongoose.Types.ObjectId(req.user._id), // we will get the user id from the req.user which we set in middleware req.user = user and next().
     role: UserRolesEnum.ADMIN, // the user who created the project will be the admin of the project
   });
 
@@ -93,8 +92,8 @@ export const createProject = asyncHandler(async (req, res) => {
 
 // @ts-ignore
 export const getProjectById = asyncHandler(async (req, res) => {
-  const { params } = req.params;
-  const project = await ProjectMember.findById({ projectId: params.id });
+  const { projectId } = req.params;
+  const project = await Project.findById(projectId);
   if (!project) {
     throw new ApiError(404, "Project not found", undefined);
   }
@@ -106,9 +105,9 @@ export const getProjectById = asyncHandler(async (req, res) => {
 // @ts-ignore
 export const updateProject = asyncHandler(async (req, res) => {
   const { name, description } = req.body;
-  const { params } = req.params;
+  const { projectId } = req.params;
   const project = await Project.findByIdAndUpdate(
-    params.id,
+    projectId,
     { name, description },
     { new: true },
   );
@@ -123,7 +122,7 @@ export const updateProject = asyncHandler(async (req, res) => {
 // @ts-ignore
 export const addMembersToProject = asyncHandler(async (req, res) => {
   const { email, role } = req.body;
-  const projectId = req.params.id;
+  const { projectId } = req.params;
 
   const user = await User.findOne({ email: email });
   if (!user) {
@@ -155,7 +154,7 @@ export const addMembersToProject = asyncHandler(async (req, res) => {
 
 // @ts-ignore
 export const getProjectMembers = asyncHandler(async (req, res) => {
-  const projectId = req.params.id;
+  const { projectId } = req.params;
   const project = await Project.findById(projectId);
   if (!project) {
     throw new ApiError(404, "Project not found", undefined);
@@ -219,7 +218,7 @@ export const updateMemberRole = asyncHandler(async (req, res) => {
   const { userId, projectId } = req.params;
   const { newRole } = req.body;
 
-  if (!AvailableTaskStatuses.includes(newRole)) {
+  if (!AvailableUserRoles.includes(newRole)) {
     throw new ApiError(400, "Invalid role provided", undefined);
   }
   let projectMember = await ProjectMember.findOne({
