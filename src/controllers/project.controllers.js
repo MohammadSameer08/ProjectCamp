@@ -11,7 +11,53 @@ import { ApiResponse } from "../utils/api-response.js";
 
 // @ts-ignore
 
-export const getProjects = asyncHandler(async (req, res) => {});
+export const getProjects = asyncHandler(async (req, res) => {
+  const projects = await ProjectMember.aggregate([
+    {
+      $match: {
+        user: new mongoose.Types.ObjectId(req.user._id), // we will get the user id from the req.user which we set in middleware req.user = user and next().
+      },
+    },
+    {
+      $lookup: {
+        from: "projects",
+        localField: "projects",
+        foreignField: "_id",
+        as: "project",
+        pipeline: [
+          {
+            $lookup: {
+              from: "users",
+              localField: "user",
+              foreignField: "_id",
+              as: "user",
+            },
+          },
+          { $addFields: { members: { $size: "$projectmembers" } } },
+        ],
+      },
+    },
+    { $unwind: "$project" },
+    {
+      $project: {
+        project: {
+          _id: 1,
+          name: 11,
+          description: 1,
+          members: 1,
+          role: 1,
+          createdAt: 1,
+          updatedAt: 1,
+        },
+        role: 1,
+        _id: 0,
+      },
+    },
+  ]);
+  return res
+    .status(200)
+    .json(new ApiResponse(200, projects, "Projects fetched successfully"));
+});
 // @ts-ignore
 export const deleteProject = asyncHandler(async (req, res) => {
   const { params } = req.params;
