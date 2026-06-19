@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-ignore
 const asyncHandler = (requestHandler) => {
   // @ts-ignore

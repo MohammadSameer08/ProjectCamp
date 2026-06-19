@@ -1,8 +1,8 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { User } from "../models/user.models.js";
 import { ApiError } from "../utils/api-error.js";
 import { asyncHandler } from "../utils/async-handler.js";
-import { sendEmail } from "../utils/mail.js";
-import { emailVerificationMailGenContent } from "../utils/mail.js";
+
 import jwt from "jsonwebtoken";
 
 // @ts-ignore

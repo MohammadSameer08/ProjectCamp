@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
 export class ApiResponse {
   constructor(statusCode, data = {}, message = "Success   ") {

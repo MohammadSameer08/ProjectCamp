@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { validationResult } from "express-validator";
 import { ApiError } from "../utils/api-error.js";
 

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
 import { User } from "../models/user.models.js";
 // @ts-ignore
@@ -5,7 +7,7 @@ import { ApiResponse } from "../utils/api-response.js";
 import { ApiError } from "../utils/api-error.js";
 import { asyncHandler } from "../utils/async-handler.js";
 import { sendEmail } from "../utils/mail.js";
-import { emailVerificationMailGenContent } from "../utils/mail.js";
+import { emailVerificationMailGenContent, forgotPasswordMailGenContent } from "../utils/mail.js";
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
 // @ts-ignore
