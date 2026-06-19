@@ -55,6 +55,21 @@ const createProjectValidator = () => {
   ];
 };
 
+const addMemebertoProjectValidator = () => {
+  return [
+    body("email")
+      .notEmpty()
+      .withMessage("Email is required")
+      .isEmail()
+      .withMessage("Email is invalid"),
+    body("role")
+      .notEmpty()
+      .withMessage("Role is required")
+      .isIn(["admin", "member"])
+      .withMessage("Role must be either admin or member"),
+  ];
+};
+
 export {
   userRegisterValidator,
   userLoginValidator,
@@ -62,4 +77,5 @@ export {
   userForgotPasswordValidator,
   userResetForgotPasswordValidator,
   createProjectValidator,
+  addMemebertoProjectValidator,
 };
