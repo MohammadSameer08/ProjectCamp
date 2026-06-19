@@ -23,6 +23,6 @@ export const verifyJWT = asyncHandler(async (req, res, next) => {
   if (!user) {
     throw new ApiError(401, "Unauthorized: User not found", undefined);
   }
-  req.user = user; // so that we can use in while logging out in controllers/auth.controller.js
+  req.user = user; // so that we can use in the next middleware or controller see getCurrentUser of user.controllers.js we are using req.user to get the current user details
   next();
 });
