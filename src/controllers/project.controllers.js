@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/ban-ts-comment */ 
 import { User } from "../models/user.models.js";
 import { ProjectMember } from "../models/projectmember.models.js";
 import { Project } from "../models/project.models.js";

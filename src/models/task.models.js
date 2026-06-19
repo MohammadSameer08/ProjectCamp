@@ -12,11 +12,11 @@ const taskSchema = new Schema(
       default: TaskStatusEnum.TODO,
       required: true,
     },
-    projectId: { type: Schema.Types.ObjectId, ref: "Project", required: true },
+    project: { type: Schema.Types.ObjectId, ref: "Project", required: true },
     assignedTo: { type: Schema.Types.ObjectId, ref: "User" },
     assignedBy: { type: Schema.Types.ObjectId, ref: "User" },
+    type: [{ url: String, mimeType: String, size: Number }],
     attachments: {
-      type: [{ url: String, mimeType: String, size: Number }],
       default: [],
     }, // Array of file URLs or paths
   },
