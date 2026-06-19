@@ -577,6 +577,240 @@ res.cookie("accessToken", token, options);
 
 ---
 
+
+## Project Route APIs Guide
+
+
+
+### **Base URL:** `/api/v1/projects` (or wherever your API is mounted)
+### **Authentication:** ✅ All routes require JWT token (Bearer token or cookie)
+
+---
+
+## **1. Get All Projects**
+```http
+GET /api/v1/projects
+```
+
+**Headers:**
+```
+Authorization: Bearer <accessToken>
+```
+
+**Response:**
+```json
+{
+  "statusCode": 200,
+  "data": [
+    {
+      "project": {
+        "_id": "507f1f77bcf86cd799439011",
+        "name": "My Project",
+        "description": "Project description",
+        "members": 5,
+        "createdAt": "2024-01-01T10:00:00Z",
+        "updatedAt": "2024-01-01T10:00:00Z"
+      },
+      "role": "ADMIN"
+    }
+  ],
+  "message": "Projects fetched successfully"
+}
+```
+
+---
+
+## **2. Create Project**
+```http
+POST /api/v1/projects
+```
+
+**Headers:**
+```
+Authorization: Bearer <accessToken>
+Content-Type: application/json
+```
+
+**Body:**
+```json
+{
+  "name": "My New Project",
+  "description": "Project description"
+}
+```
+
+**Response:**
+```json
+{
+  "statusCode": 201,
+  "data": {
+    "_id": "507f1f77bcf86cd799439011",
+    "name": "My New Project",
+    "description": "Project description",
+    "createdAt": "2024-01-01T10:00:00Z"
+  },
+  "message": "Project created successfully"
+}
+```
+
+---
+
+## **3. Get Project by ID**
+```http
+GET /api/v1/projects/:projectId
+```
+
+**Parameters:**
+- `projectId` (required) - Project MongoDB ID
+
+**Headers:**
+```
+Authorization: Bearer <accessToken>
+```
+
+---
+
+## **4. Update Project** (Admin only)
+```http
+PUT /api/v1/projects/:projectId
+```
+
+**Headers:**
+```
+Authorization: Bearer <accessToken>
+Content-Type: application/json
+```
+
+**Body:**
+```json
+{
+  "name": "Updated Project Name",
+  "description": "Updated description"
+}
+```
+
+---
+
+## **5. Delete Project** (Admin only)
+```http
+DELETE /api/v1/projects/:projectId
+```
+
+**Headers:**
+```
+Authorization: Bearer <accessToken>
+```
+
+---
+
+## **6. Get Project Members**
+```http
+GET /api/v1/projects/:projectId/members
+```
+
+**Response:**
+```json
+{
+  "statusCode": 200,
+  "data": [
+    {
+      "_id": "507f1f77bcf86cd799439012",
+      "userId": "507f1f77bcf86cd799439013",
+      "role": "ADMIN",
+      "createdAt": "2024-01-01T10:00:00Z"
+    }
+  ],
+  "message": "Project members fetched successfully"
+}
+```
+
+---
+
+## **7. Add Member to Project** (Admin only)
+```http
+POST /api/v1/projects/:projectId/members
+```
+
+**Headers:**
+```
+Authorization: Bearer <accessToken>
+Content-Type: application/json
+```
+
+**Body:**
+```json
+{
+  "userId": "507f1f77bcf86cd799439013",
+  "role": "MEMBER"
+}
+```
+
+---
+
+## **8. Update Member Role** (Admin only)
+```http
+PUT /api/v1/projects/:projectId/members/:userId
+```
+
+**Headers:**
+```
+Authorization: Bearer <accessToken>
+Content-Type: application/json
+```
+
+**Body:**
+```json
+{
+  "role": "ADMIN"
+}
+```
+
+---
+
+## **9. Delete Member from Project** (Admin only)
+```http
+DELETE /api/v1/projects/:projectId/members/:userId
+```
+
+**Headers:**
+```
+Authorization: Bearer <accessToken>
+```
+
+---
+
+## **Using with cURL/Postman**
+
+### **Example: Create a project**
+```bash
+curl -X POST http://localhost:3000/api/v1/projects \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR..." \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "My Project",
+    "description": "My first project"
+  }'
+```
+
+### **Example: Get all projects**
+```bash
+curl -X GET http://localhost:3000/api/v1/projects \
+  -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR..."
+```
+
+---
+
+## **Permission Levels**
+
+| Action | Owner/Admin | Member | Viewer |
+|--------|-------------|--------|--------|
+| View Project | ✅ | ✅ | ✅ |
+| Update Project | ✅ | ❌ | ❌ |
+| Delete Project | ✅ | ❌ | ❌ |
+| Add Members | ✅ | ❌ | ❌ |
+| Update Member Role | ✅ | ❌ | ❌ |
+| Remove Members | ✅ | ❌ | ❌ |
+
 ## 🔧 Running the Project
 
 ```bash
@@ -593,5 +827,3 @@ npm start
 **Default Port:** 8000 (from .env)
 
 ---
-
-**Good luck with your interview! 🚀**
